@@ -1,0 +1,539 @@
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="UsePIX">
+
+    <title>Card2PIX</title>
+    <meta name="description" content="Converta o limite do seu cartão em PIX. Quanto deseja receber no PIX agora?">
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.1.6/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    const urlBase = "https://usepix.com.br/", // url base do checkout
+          valorMinimo = 1, // limite mínimo para conversão
+          valorMaximo = 1200, // limite máximo para conversão (verificar o seu limite com o suporte)
+          pixParceiro = "email@dominio.com.br"; // sua chave pix para receber as comissões
+  </script>
+
+  </head>
+  <body data-theme="cupcake">
+
+    <input type="hidden" name="valorInput" id="valorInput" value="" />
+    
+    <div class="navbar bg-base-100">
+      <div class="container mx-auto">
+        <div class="flex-1">
+          <a class="btn btn-ghost normal-case text-xl">Card2PIX</a>
+        </div>
+        <div class="flex-none">
+          <ul class="menu menu-horizontal px-1" id="nav">
+            <li class="hidden sm:block"><a href="#comofunciona">Como funciona?</a></li>
+            <li class="hidden sm:block"><a href="#receba">Receba seu PIX</a></li>
+            <li>
+              <details>
+                <summary>
+                  Saiba Mais
+                </summary>
+                <ul class="p-2 bg-base-100">
+                  <li class="block sm:hidden"><a href="#comofunciona">Como funciona?</a></li>
+                  <li class="block sm:hidden"><a href="#receba">Receba seu PIX</a></li>
+                  <li><a href="#taxas">Taxas e Prazos</a></li>
+                  <li><a href="#quemsomos">Quem Somos</a></li>
+                  <li><a href="https://usepix.com.br" target="_blank">A UsePIX</a></li>
+                </ul>
+              </details>
+            </li>
+          </ul>
+          <button class="btn btn-ghost btn-circle">
+            <div class="indicator">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+              <span class="badge badge-xs badge-primary indicator-item"></span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="container mx-auto">
+
+
+      <div class="bg-base-200 py-5 md:py-20 divs" id="passo1">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 mx-auto max-w">
+          <div class="text-center md:text-right pe-5">
+          
+            <h2 class="text-[clamp(2.5rem,6vw,4.5rem)] font-light leading-none">converta o limite<br /> do seu cartão <br /><span class="text-success">em <span class="font-black">PIX</span></span></h2>
+            <div class="h-6"></div>
+
+          </div>
+          <div class="max-w-sm">
+            <form onsubmit="validarValorInicio();return false;">
+              <div class="card w-100 m-auto">
+                <div class="card-body">
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text text-[clamp(1.5rem,6vw,1.5rem)] mb-5 font-light">Quanto deseja receber no PIX agora?</span>
+                    </label>
+                    <input type="text" placeholder="Digite o valor" class="input input-bordered" id="valor" onInput="mascaraMoeda(event);" />
+                  </div>
+                  <div class="form-control mt-6">
+                    <button class="btn btn-primary" id="btnConverter" onclick="validarValorInicio();">Converter</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            
+          </div>
+        </div>
+
+      </div>
+
+
+      
+
+
+
+      <div class="bg-base-200 p-5 md:py-20 divs" id="passo2" style="display: none;">
+        
+        <h2 class="text-[clamp(2.5rem,6vw,2rem)] font-light leading-none text-center">receba <strong class="valor">-</strong> do seu cartão <span class="text-success">em <span class="font-black">PIX</span></span></h2>
+
+        <div class="h-10"></div>
+
+        <div class="block text-center">
+          <ul class="steps">
+            <li data-content="✓" class="step step-success">Valor</li>
+            <li data-content="●" class="step step-success">Chave PIX</li>
+            <li data-content="" class="step">Pagar</li>
+            <li data-content="" class="step">Receber</li>
+          </ul>
+        </div>
+
+        <div class="h-3"></div>
+        
+        <div class="max-w-sm m-auto">
+          <div class="card w-100 me-auto">
+            <div class="card-body">
+
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text text-[clamp(1.3rem,6vw,1.1rem)] mb-2 font-light">
+                    Digite a chave PIX que receberá: <br />
+                    <span class="text-sm text-slate-400">(CPF, CNPJ, telefone ou e-mail)</span>
+                  </span>
+                </label>
+                <input type="text" placeholder="Digite a chave PIX" class="input input-bordered" id="chavepix" />
+              </div>
+
+              <div class="form-control pt-5">
+                <label class="label">
+                  <span class="label-text text-[clamp(1.3rem,6vw,1.1rem)] mb-2 font-light">
+                    Qual o número do seu celular: <br />
+                    <span class="text-sm text-slate-400">(caso a gente precise confirmar alguma informação)</span>
+                  </span>
+                </label>
+                <input type="text" placeholder="Digite o celular" class="input input-bordered" id="celular" />
+              </div>
+
+              <div class="form-control mt-6">
+                <button class="btn btn-primary" onclick="inicia();">Continuar</button>
+              </div>
+              <div class="form-control mt-3">
+                <button class="btn btn-primary btn-ghost btn-sm" onclick="voltar();">voltar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+
+
+      
+
+      <div class="bg-base-200 p-5 md:py-20 divs" id="passo3" style="display: none;">
+        
+        <h2 class="text-[clamp(2.5rem,6vw,2rem)] font-light leading-none text-center">receba <strong class="valor">-</strong> do seu cartão <span class="text-success">em <span class="font-black">PIX</span></span></h2>
+
+        <div class="h-10"></div>
+
+        <div class="block text-center">
+          <ul class="steps">
+            <li data-content="✓" class="step step-success">Valor</li>
+            <li data-content="✓" class="step step-success">Chave PIX</li>
+            <li data-content="●" class="step step-success">Pagar</li>
+            <li data-content="" class="step">Receber</li>
+          </ul>
+        </div>
+
+        <div class="h-3"></div>
+        
+        <div class="max-w-md m-auto">
+          <div class="card w-100 me-auto p-0">
+            <div class="card-body">
+              <div class="form-control p-0" id="boxIframe">
+                
+              </div>
+              <div class="form-control mt-3">
+                <button class="btn btn-primary btn-ghost btn-sm" onclick="voltar();">voltar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+
+
+      
+
+      <div class="bg-base-200 p-5 md:py-20 divs" id="carregando" style="display: none;">
+        
+        <div class="block w-100 p-20 text-center">
+          <span class="loading loading-spinner loading-lg" style="width: 5rem;"></span><br />
+          Carregando...
+        </div>
+
+      </div>
+
+
+      
+      <div class="h-20"></div>
+
+
+
+      <div class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20" id="comofunciona">
+        <div class="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
+          <h2 class="max-w-lg mb-6 font-sans text-3xl font-bold leading-none tracking-tight text-gray-900 sm:text-4xl md:mx-auto">
+            Como Funciona?
+          </h2>
+        </div>
+        <div class="grid gap-8 row-gap-8 lg:grid-cols-4">
+          <div class="sm:text-center">
+            <div class="flex items-center justify-center w-24 h-24 mb-4 text-5xl font-extrabold rounded-full text-deep-purple-accent-400 bg-indigo-50 sm:mx-auto">
+              1
+            </div>
+            <h6 class="mb-2 font-semibold leading-5">Digite o Valor</h6>
+            <p class="max-w-md mb-3 text-sm text-gray-900 sm:mx-auto">
+              Digite o valor EXATO que você receberá no PIX. Lembre-se que taxas adicionais podem ser cobradas pela sua operadora de cartão.
+            </p>
+          </div>
+          <div class="sm:text-center">
+            <div class="flex items-center justify-center w-24 h-24 mb-4 text-5xl font-extrabold rounded-full text-deep-purple-accent-400 bg-indigo-50 sm:mx-auto">
+              2
+            </div>
+            <h6 class="mb-2 font-semibold leading-5">Chave PIX!</h6>
+            <p class="max-w-md mb-3 text-sm text-gray-900 sm:mx-auto">
+              Digite a chave PIX que receberá o valor. Pode ser CPF, CNPJ, telefone ou e-mail. Chaves aleatórias não são aceitas.
+            </p>
+          </div>
+          <div class="sm:text-center">
+            <div class="flex items-center justify-center w-24 h-24 mb-4 text-5xl font-extrabold rounded-full text-deep-purple-accent-400 bg-indigo-50 sm:mx-auto">
+              3
+            </div>
+            <h6 class="mb-2 font-semibold leading-5">Pague com Cartão</h6>
+            <p class="max-w-md mb-3 text-sm text-gray-900 sm:mx-auto">
+              Pague parcelado em até 12x utilizando o limite do seu cartão de crédito.
+            </p>
+          </div>
+          <div class="sm:text-center">
+            <div class="flex items-center justify-center w-24 h-24 mb-4 text-5xl font-extrabold rounded-full text-deep-purple-accent-400 bg-indigo-50 sm:mx-auto">
+              4
+            </div>
+            <h6 class="mb-2 font-semibold leading-5">Receba o PIX!</h6>
+            <p class="max-w-md mb-3 text-sm text-gray-900 sm:mx-auto">
+              Aguarde alguns minutos e receba o valor no PIX informado, com segurança, confiabilidade e rapidez.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-5">
+
+        <p class="text-base-content/60 font-title relative z-[2] py-4 font-light md:text-3xl text-center">Conheça nossos impressionantes números!</p>
+
+        <div class="grid gap-10 p-6 xl:grid-cols-3">
+          <div class="flex flex-col items-center gap-4" style="transform:translateY(0rem);opacity:1">
+            <h3 class="text-[clamp(2rem,6vw,5rem)] font-black tabular-nums"><span>+18k</span></h3>
+            Clientes únicos
+          </div>
+          
+          <div class="flex flex-col items-center gap-4" style="transform:translateY(0rem);opacity:1">
+            <h3 class="text-[clamp(2rem,6vw,5rem)] font-black tabular-nums"><span>R$ 1k</span></h3>
+            Valor Médio
+          </div>
+          
+          <div class="flex flex-col items-center gap-4" style="transform:translateY(0rem);opacity:1">
+            <h3 class="text-[clamp(2rem,6vw,5rem)] font-black tabular-nums"><span>R$ 3M</span></h3>
+            PIX já convertidos
+          </div>
+        </div>
+      </div>
+      
+      <div class="h-20"></div>
+
+      
+
+      <div class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
+        <h5 class="mb-2 mb-8 text-4xl font-extrabold leading-none md:pl-2">
+          Facilite sua<br class="hidden md:block" />
+          vida financeira
+        </h5>
+        <div class="grid gap-3 row-gap-2 lg:grid-cols-2">
+          <ul class="space-y-3">
+            <li class="flex items-start">
+              <span class="mr-1">
+                <svg class="w-5 h-5 mt-px text-deep-purple-accent-400" stroke="currentColor" viewBox="0 0 52 52">
+                  <polygon stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" points="29 13 14 29 25 29 23 39 38 23 27 23"></polygon>
+                </svg>
+              </span>
+              Acesso instantâneo sem prévio cadastro
+            </li>
+            <li class="flex items-start">
+              <span class="mr-1">
+                <svg class="w-5 h-5 mt-px text-deep-purple-accent-400" stroke="currentColor" viewBox="0 0 52 52">
+                  <polygon stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" points="29 13 14 29 25 29 23 39 38 23 27 23"></polygon>
+                </svg>
+              </span>
+              Receba o valor no PIX em até 5 minutos
+            </li>
+            <li class="flex items-start">
+              <span class="mr-1">
+                <svg class="w-5 h-5 mt-px text-deep-purple-accent-400" stroke="currentColor" viewBox="0 0 52 52">
+                  <polygon stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" points="29 13 14 29 25 29 23 39 38 23 27 23"></polygon>
+                </svg>
+              </span>
+              Pague em até 12x no cartão de crédito
+            </li>
+            <li class="flex items-start">
+              <span class="mr-1">
+                <svg class="w-5 h-5 mt-px text-deep-purple-accent-400" stroke="currentColor" viewBox="0 0 52 52">
+                  <polygon stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" points="29 13 14 29 25 29 23 39 38 23 27 23"></polygon>
+                </svg>
+              </span>
+              Sem burocracia
+            </li>
+            <li class="flex items-start">
+              <span class="mr-1">
+                <svg class="w-5 h-5 mt-px text-deep-purple-accent-400" stroke="currentColor" viewBox="0 0 52 52">
+                  <polygon stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" points="29 13 14 29 25 29 23 39 38 23 27 23"></polygon>
+                </svg>
+              </span>
+              Sem taxas adicionais
+            </li>
+            <li class="flex items-start">
+              <span class="mr-1">
+                <svg class="w-5 h-5 mt-px text-deep-purple-accent-400" stroke="currentColor" viewBox="0 0 52 52">
+                  <polygon stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" points="29 13 14 29 25 29 23 39 38 23 27 23"></polygon>
+                </svg>
+              </span>
+              Sem consulta ao SPC/SERASA
+            </li>
+            <li class="flex items-start">
+              <span class="mr-1">
+                <svg class="w-5 h-5 mt-px text-deep-purple-accent-400" stroke="currentColor" viewBox="0 0 52 52">
+                  <polygon stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" points="29 13 14 29 25 29 23 39 38 23 27 23"></polygon>
+                </svg>
+              </span>
+              Atendimento 24h por dia
+            </li>
+            <li class="flex items-start">
+              <span class="mr-1">
+                <svg class="w-5 h-5 mt-px text-deep-purple-accent-400" stroke="currentColor" viewBox="0 0 52 52">
+                  <polygon stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" points="29 13 14 29 25 29 23 39 38 23 27 23"></polygon>
+                </svg>
+              </span>
+              Suporte via WhatsApp
+            </li>
+            <li class="flex items-start">
+              <span class="mr-1">
+                <svg class="w-5 h-5 mt-px text-deep-purple-accent-400" stroke="currentColor" viewBox="0 0 52 52">
+                  <polygon stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" points="29 13 14 29 25 29 23 39 38 23 27 23"></polygon>
+                </svg>
+              </span>
+              100% seguro
+            </li>
+            <li class="flex items-start">
+              <span class="mr-1">
+                <svg class="w-5 h-5 mt-px text-deep-purple-accent-400" stroke="currentColor" viewBox="0 0 52 52">
+                  <polygon stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" points="29 13 14 29 25 29 23 39 38 23 27 23"></polygon>
+                </svg>
+              </span>
+              Integrado com as principais bandeiras de cartão
+            </li>
+            <li class="flex items-start">
+              <span class="mr-1">
+                <svg class="w-5 h-5 mt-px text-deep-purple-accent-400" stroke="currentColor" viewBox="0 0 52 52">
+                  <polygon stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" points="29 13 14 29 25 29 23 39 38 23 27 23"></polygon>
+                </svg>
+              </span>
+              Empresa 100% brasileira
+            </li>
+          </ul>
+          <div class="space-y-3 content-center justify-center text-center">
+            <img src="assets/images/whatsapp2.png" class="text-center m-auto" />
+            <br /><br />
+            <img src="assets/images/seguro2.png" class="text-center m-auto" style="height: 130px;" />
+          </div>
+        </div>
+      </div>
+      
+      <div class="h-20"></div>
+
+      <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8" id="receba">
+        <div class="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
+          <h2 class="max-w-lg mb-6 font-sans text-3xl font-bold leading-none tracking-tight text-gray-900 sm:text-4xl md:mx-auto">
+            Receba seu PIX
+          </h2>
+        </div>
+        <p>Após o pagamento, o sistema automaticamente irá efetuar a transferência para a chave PIX informada.</p>
+        <p>Se após o pagamento não tiver recebido o valor em até 5 minutos, entre em contato com o <a href="https://usepix.com.br/suporte" class="link">suporte da UsePix</a>.</p>
+      </div>
+      
+      <div class="h-20"></div>
+
+      <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8" id="taxas">
+        <div class="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
+          <h2 class="max-w-lg mb-6 font-sans text-3xl font-bold leading-none tracking-tight text-gray-900 sm:text-4xl md:mx-auto">
+            Taxas, Prazos e Limite
+          </h2>
+        </div>
+        <p>Poderão ser cobradas taxas por sua administradora do cartão de crédito.</p>
+        <p>Após seguir os passos e escolher do método de pagamento, o sistema irá mostrar detahadamente as taxas cobradas.</p>
+        <p>O prazo para receber o PIX é instantâneo, podendo levar até 5 minutos.</p>
+        <p>Valor mínimo: <span class="valorMinimo"></span></p>
+        <p>Valor máximo: <span class="valorMaximo"></span></p>
+      </div>
+      
+      <div class="h-20"></div>
+
+      <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8" id="quemsomos">
+        <div class="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
+          <h2 class="max-w-lg mb-6 font-sans text-3xl font-bold leading-none tracking-tight text-gray-900 sm:text-4xl md:mx-auto">
+            Quem Somos
+          </h2>
+        </div>
+        <p>Somos um agente credenciado da UsePix e facilitamos o seu acesso ao crédito.</p>
+      </div>
+      
+      <div class="h-20"></div>
+
+      <div class="bg-white p-5">
+        <img src="assets/images/seguro1.png" class="text-center m-auto" style="height: 80px;" />
+      </div>
+
+      
+    </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+  <script>
+    function mascaraMoeda(event) {
+      const onlyDigits = event.target.value
+        .split("")
+        .filter(s => /\d/.test(s))
+        .join("")
+        .padStart(3, "0")
+      const digitsFloat = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2)
+      event.target.value = maskCurrency(digitsFloat)
+      if(digitsFloat>valorMaximo) {
+        Swal.fire({
+          icon: 'info',
+          title: 'Atenção',
+          text: 'O limite máximo para conversão é de R$ '+valorMaximo+',00',
+        })
+        event.target.value = maskCurrency(valorMaximo+".00")
+      }
+    }
+
+    function maskCurrency(valor, locale = 'pt-BR', currency = 'BRL') {
+      return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency
+      }).format(valor)
+    }
+
+    // criar função para validar o valor digitado quando clicar no botão converter
+    // se o valor for menor que 1,00, exibir mensagem de erro
+    // se o valor for maior que 1,00, exibir mensagem de sucesso e abrir o modal de pagamento
+    function validarValorInicio() {
+      const valorIncial = $("#valor").val();
+      const onlyDigits = valorIncial
+        .split("")
+        .filter(s => /\d/.test(s))
+        .join("")
+        .padStart(3, "0")
+      const valor = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2);
+      if (valor < valorMinimo) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'O valor mínimo para conversão é de R$ '+valorMinimo+',00',
+        })
+      } else {
+        $(".valor").html(valorIncial);
+        $("#valorInput").val(valor);
+        controleDivShow("#passo2");
+      }
+    }
+
+    function voltar() {
+      $("#valor").val("");
+      controleDivShow("#passo1");
+      $("#valor").focus();
+    }
+
+    function controleDivShow(div) {
+      $(".divs").hide();
+      $(div).show();
+    }
+
+    function inicia() {
+      // vamos checar se a chave pix foi informada
+      const chavepix = $("#chavepix").val();
+      if (chavepix == "") {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Você precisa informar a chave PIX',
+        })
+        $("#chavepix").focus();
+        return false;
+      }
+      // vamos checar se o celular foi informado
+      const celular = $("#celular").val();
+      if (celular == "") {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Você precisa informar o celular',
+        })
+        $("#celular").focus();
+        return false;
+      }
+      
+      controleDivShow("#passo3");
+
+      const url = urlBase + $("#chavepix").val() + "/" + $("#valorInput").val() + "/?pixParceiro="+pixParceiro+"&celularCliente="+celular+"&pay";
+      $("#boxIframe").html('<iframe src="' + url + '" style="width: 100%; height: 500px; border: none;"></iframe>');
+      
+      
+    }
+
+    // onload
+    $(document).ready(function() {
+      controleDivShow("#passo1");
+      $(".valorMinimo").html(maskCurrency(valorMinimo+".00"));
+      $(".valorMaximo").html(maskCurrency(valorMaximo+".00"));
+    });
+  </script>
+
+  </body>
+</html>
